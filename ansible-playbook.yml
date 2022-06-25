@@ -1,26 +1,28 @@
 ---
 - name: "Build a container with ansible"
   hosts: localhost
+  vars:
+    version: 1.0.0
+    version_precedent: 0.8.0
   connection: local
   tasks:
-    - name: stop current running container
-      command: docker stop web-container
+    - name: stop current running commingsoon-container
+      command: docker stop commingsoon-container{{version_precedent}}
       ignore_errors: yes
 
-    - name: remove stopped container
-      command: docker rm web-container
+    - name: remove stopped commingsoon-container
+      command: docker rm commingsoon-container{{version_precedent}}
       ignore_errors: yes
 
-    - name: remove comingsoon-image
-      command: docker rmi triple3a/comingsoon-page
+    - name: remove website-comingsoon image
+      command: docker rmi --force hamzabedwi/website-commingsoon{{version_precedent}}
       ignore_errors: yes
 
     - name: build docker image using the Dockerfile
-      command: docker build -t triple3a/comingsoon-page .
+      command: docker build -t hamzabedwi/website-commingsoon:{{version}} .
 
     - name: Push Image to dockerhub
-      command: docker push triple3a/comingsoon-page
+      command: docker push hamzabedwi/website-commingsoon:{{version}}
 
-    - name: run container
-      command: docker run -d --name web-container -p 5000:80 triple3a/comingsoon-page
-
+    - name: run container **name= commingsoon-container
+      command: docker run -d --name commingsoon-container{{version}} -p 5000:80 hamzabedwi/website-commingsoon:{{version}}
