@@ -7,37 +7,44 @@
     - name: install updates
       command: apt update -y
 
-    # - name: install git
-    #   apt:
-    #     name: git
-    #     state: present
-    #     update_cache: yes
+    - name: install git
+      apt:
+        name: git
+        state: present
+        update_cache: yes
 
-    # - name: clone repo
-    #   ansible.builtin.git:
-    #     repo: https://github.com/johnbedeir/laravel-app.git
-    #     dest: "{{ x }}laravel-app"
+    - name: clone repo
+      ansible.builtin.git:
+        repo: https://github.com/hamza-webdev/laravel-app-main
+        dest: "{{ x }}laravel-app"
 
-    # - name: add text to .bashrc file
-    #   blockinfile:
-    #     path: "{{ x }}.bashrc"
-    #     block: |
-    #       export PYENV_ROOT="/root/.pyenv"
-    #       export PATH="$PYENV_ROOT/bin:$PATH"
-    #       eval "$(pyenv init --path)"
-    #       eval "$(pyenv init -)"
-    # - name: create sh script
-    #   file:
-    #     path: "{{ x }}script.sh"
-    #     state: touch
+    - name: add text to .bashrc file
+      blockinfile:
+        path: "{{ x }}.bashrc"
+        block: |
+          export PYENV_ROOT="/root/.pyenv"
+          export PATH="$PYENV_ROOT/bin:$PATH"
+          eval "$(pyenv init --path)"
+          eval "$(pyenv init -)"
+    - name: create sh script
+      file:
+        path: "{{ x }}script.sh"
+        state: touch
 
-    # - name: insert text into script
-    #   lineinfile:
-    #     path: "{{ x }}script.sh"
-    #     line: "pip install --upgrade pip"
+    - name: insert text into script
+      blockinfile:
+        path: "{{ x }}script.sh"
+        block: |
+          #!/bin/sh
+          apt update
+          apt install python3-pip -y
+          pip3 install --upgrade pip
 
-    # - name: set executable permission for script.sh
-    #   ansible.builtin.file:
-    #     path: "{{ x }}script.sh"
-    #     state: touch
-    #     mode: u=rwx,g=rwx,o=rwx
+    - name: set executable permission for script.sh
+      ansible.builtin.file:
+        path: "{{ x }}script.sh"
+        state: touch
+        mode: +x
+    # see https://docs.ansible.com/ansible/latest/collections/ansible/builtin/shell_module.html
+    - name: run script.sh
+      command: sh /root/script.sh
