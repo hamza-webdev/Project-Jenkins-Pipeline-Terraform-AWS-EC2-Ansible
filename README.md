@@ -2,7 +2,7 @@
 
 ## Step 1:
 
-### Build AWS EC2 Instance
+### Build AWS EC2 Instance cmd
 
 ```
 cd Terraform-Ubuntu-EC2/
